@@ -77,17 +77,17 @@ class Cardboard_Box:
         self.lid_hight = lid_hight
 
     # картонная крышка
-    def lid_cb(self, x, y, lid_hight, thickness_cb):
+    def lid_cb(self):
         indent = 5
-        width = (lid_hight*2)+x+(thickness_cb*2)+2+indent
-        length = (lid_hight*2)+y+(thickness_cb*2)+2+indent
+        width = (self.lid_hight*2)+self.width+(self.thickness_cb*2)+2+indent
+        length = (self.lid_hight*2)+self.length+(self.thickness_cb*2)+2+indent
         return [width, length]
 
     # картонное дно
-    def tray_cb(self, x, y, tray_hight):
+    def tray_cb(self):
         indent = 10
-        width = (tray_hight*2)+x+indent
-        length = (tray_hight*2)+y+indent
+        width = (self.tray_hight*2)+self.width+indent
+        length = (self.tray_hight*2)+self.length+indent
         return [width, length]
 
     # расчет отдельно крышка и дно
@@ -107,15 +107,33 @@ class Cardboard_Box:
         lis_siz = [1000, 700]
         try:
             # четыре варианта располодения крышки и дно вместе
-            lis_tw = [[tray[0], lid[1] + tray[1]], [tray[0] + lid[0], tray[1]],
-                      [tray[0], lid[0] + tray[1]], [lid[1] + tray[0], lid[0]]]
+            if tray[0] >= lid[0]:
+                tray_lid_1 = tray[0]
+            else:
+                tray_lid_1 = lid[0]
+
+            if tray[0] >= lid[1]:
+                tray_lid_2 = tray[0]
+            else:
+                tray_lid_2 = lid[1]
+
+            if tray[1] >= lid[1]:
+                tray_lid_4 = tray[1]
+            else:
+                tray_lid_4 = lid[1]
+
+            if tray[1] <= lid[0]:
+                tray_lid_3 = lid[0]
+            else:
+                tray_lid_3 = tray[1]
+
+            lis_tw = [[tray_lid_1, lid[1] + tray[1]], [tray[0] + lid[0], tray_lid_4],
+                      [tray_lid_2, lid[0] + tray[1]], [lid[1] + tray[0], tray_lid_3]]
 
             # результат дно и крышка вместе
             result_tw = calc(lis_tw, lis_siz)
-            print(result_tw)
             # результат дно и крышка раздельно
             result_one = self.sep_lid_tray(lid, tray, lis_siz)
-            print(result_one)
 
             if result_tw[0] <= result_one:
                 lid_m2 = calc_m2(lis_one[0])
@@ -139,9 +157,9 @@ class Cardboard_Box:
 
     def cardboard_box(self):
         # развернутая крышка
-        lid_card = self.lid_cb(self.width, self.length, self.lid_hight, self.thickness_cb)
+        lid_card = self.lid_cb()
         # развернутое дно
-        tray_card = self.tray_cb(self.width, self.length, self.lid_hight,)
+        tray_card = self.tray_cb()
 
         try:
             result = self.expence(lid_card, tray_card)
@@ -162,38 +180,38 @@ class Paper_Box:
         self.kink_paper_tray = kink_paper_tray
 
     # бумага крышка
-    def lid_paper(self, x, y, lid_hight, thickness_cb, kink_paper):
+    def lid_paper(self):
         indent = 5
-        c = math.sqrt((thickness_cb ** 2) + (thickness_cb ** 2))
-        width = (lid_hight * 2) + x + (thickness_cb * 2) + 1 + (c * 2) + (kink_paper * 2) + indent
-        length = (lid_hight * 2) + y + (thickness_cb * 2) + 1 + (c * 2) + (kink_paper * 2) + indent
+        c = math.sqrt((self.thickness_cb ** 2) + (self.thickness_cb ** 2))
+        width = (self.lid_hight*2)+self.width+(self.thickness_cb*2)+1+(c * 2)+(self.kink_paper_lid*2)+indent
+        length = (self.lid_hight*2)+self.length+(self.thickness_cb*2)+1+(c*2)+(self.kink_paper_lid*2)+indent
         return [math.ceil(width), math.ceil(length)]
 
     # бумага дно одним листом
-    def tray_paper_once(self, x, y, lid_hight, thickness_cb, kink_paper):
+    def tray_paper_once(self):
         indent = 5
-        c = math.sqrt((thickness_cb ** 2) + (thickness_cb ** 2))
-        width = (lid_hight * 2) + x + (thickness_cb * 2) + (c * 2) + (kink_paper * 2) + indent
-        length = (lid_hight * 2) + y + (thickness_cb * 2) + (c * 2) + (kink_paper * 2) + indent
+        c = math.sqrt((self.thickness_cb ** 2) + (self.thickness_cb ** 2))
+        width = (self.lid_hight*2)+self.width+(self.thickness_cb*2)+(c*2)+(self.kink_paper_tray*2)+indent
+        length = (self.lid_hight*2)+self.length+(self.thickness_cb*2)+(c*2)+(self.kink_paper_tray*2)+indent
         return [math.ceil(width), math.ceil(length)]
 
     # бумага дно бортом
-    def tray_paper_rim(self, x, y, tray_hight, thickness_cb, kink_paper):
+    def tray_paper_rim(self):
         indent = 5
-        c = math.sqrt((thickness_cb ** 2) + (thickness_cb ** 2))
-        corner = thickness_cb ** 4
-        width = tray_hight + kink_paper + c + thickness_cb + 10 + indent
-        length = (x * 2) + (y * 2) + corner + 20 + indent
-        return [[math.ceil(width), math.ceil(length)], [x - 3, y - 3]]
+        c = math.sqrt((self.thickness_cb ** 2) + (self.thickness_cb ** 2))
+        corner = self.thickness_cb ** 4
+        width = self.tray_hight + self.kink_paper_tray + c + self.thickness_cb + 10 + indent
+        length = (self.width * 2) + (self.length * 2) + corner + 20 + indent
+        return [[math.ceil(width), math.ceil(length)], [self.width - 3, self.length - 3]]
 
     # бумага дно двумя бортами
-    def tray_paper_rim_tw(self, x, y, tray_hight, thickness_cb, kink_paper):
+    def tray_paper_rim_tw(self):
         indent = 5
-        c = math.sqrt((thickness_cb ** 2) + (thickness_cb ** 2))
-        corner = thickness_cb ** 4
-        width = tray_hight + kink_paper + c + thickness_cb + 10 + indent
-        length = x + y + (corner / 2) + 20 + indent
-        return [[math.ceil(width), math.ceil(length)], [x - 3, y - 3], [0, 0]]
+        c = math.sqrt((self.thickness_cb ** 2) + (self.thickness_cb ** 2))
+        corner = self.thickness_cb ** 4
+        width = self.tray_hight + self.kink_paper_tray + c + self.thickness_cb + 10 + indent
+        length = self.width + self.length + (corner / 2) + 20 + indent
+        return [[math.ceil(width), math.ceil(length)], [self.width - 3, self.length - 3], [0, 0]]
 
     # расход материала
     def expence(self, lid, tray):
@@ -229,16 +247,16 @@ class Paper_Box:
     def cub_box_paper(self):
         lis_siz = [1000, 700]
         # бумага крышка
-        lid_pap = self.lid_paper(self.width, self.length, self.lid_hight, self.thickness_cb, self.kink_paper_lid)
+        lid_pap = self.lid_paper()
         if self.tray_hight <= 75:
             # бумага дно одним листом
-            tray_pap = self.tray_paper_once(self.width, self.length, self.tray_hight, self.thickness_cb, self.kink_paper_tray)
+            tray_pap = self.tray_paper_once()
         else:
             # бумага дно бортом
-            tray_pap = self.tray_paper_rim(self.width, self.length, self.tray_hight, self.thickness_cb, self.kink_paper_tray)
+            tray_pap = self.tray_paper_rim()
             # бумага двумя бортами
             if tray_pap[0][1] > lis_siz[0]:
-                tray_pap = self.tray_paper_rim_tw(self.width, self.length, self.tray_hight, self.thickness_cb, self.kink_paper_tray)
+                tray_pap = self.tray_paper_rim_tw()
 
         try:
             result = self.expence(lid_pap, tray_pap)
