@@ -4,17 +4,23 @@ import math
 
 
 # Create your models here.
-class Order(models.Model):
-    order_dt = models.DateTimeField(auto_now=True)
-    order_name = models.CharField(max_length=200, verbose_name='Name')
-    order_phone = models.CharField(max_length=200, verbose_name='Telephone')
+class Work(models.Model):
+    Name = models.CharField(max_length=200, null=True)
+    Format = models.CharField(max_length=200, null=True)
+    Size = models.CharField(max_length=200, null=True)
+    dm2 = models.CharField(max_length=200, null=True)
+    Tray = models.CharField(max_length=200, null=True)
+    Lid = models.CharField(max_length=200, null=True)
+    Content = models.CharField(max_length=200, null=True)
+    Close_fitting = models.CharField(max_length=200, null=True)
+    Scotch = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return self.order_name
+        return self.Name
 
-    class Meta:
-        verbose_name = 'Order'
-        verbose_name_plural = 'Orders'
+
+def toFixed(numObj, digits=0):
+    return f"{numObj:.{digits}f}"
 
 
 def calc(lis, lis_siz):
@@ -55,6 +61,11 @@ def calc(lis, lis_siz):
 
     result = 1 / kol_lis
     return [result, var]
+
+
+def calc_m2(lis):
+    m2 = (lis[0]/100) * (lis[1]/100)
+    return m2
 
 
 class Cardboard_Box:
@@ -101,22 +112,30 @@ class Cardboard_Box:
 
             # результат дно и крышка вместе
             result_tw = calc(lis_tw, lis_siz)
+            print(result_tw)
             # результат дно и крышка раздельно
             result_one = self.sep_lid_tray(lid, tray, lis_siz)
+            print(result_one)
 
             if result_tw[0] <= result_one:
-                return f'- {result_tw[0]}л. Крышка и дно вместе. ' \
-                       f'Крышка-дно - {result_tw[1][0]}x{result_tw[1][1]}мм.'
+                lid_m2 = calc_m2(lis_one[0])
+                tray_m2 = calc_m2(lis_one[1])
+                return [f'Расход картона - {toFixed(result_tw[0], 2)}л. Крышка и дно вместе. '
+                       f'Крышка-дно - {result_tw[1][0]}x{result_tw[1][1]}мм.', result_tw]
             else:
-                return f'- {result_one}л. Крышка и дно раздельно. ' \
-                       f'Крышка - {lis_one[0][0]}x{lis_one[0][1]}мм. ' \
-                       f'Дно - {lis_one[1][0]}x{lis_one[1][1]}мм.'
+                lid_m2 = calc_m2(lis_one[0])
+                tray_m2 = calc_m2(lis_one[1])
+                return [f'Расход картона - {toFixed(result_one, 2)}л. Крышка и дно раздельно. '
+                       f'Крышка - {lis_one[0][0]}x{lis_one[0][1]}мм. '
+                       f'Дно - {lis_one[1][0]}x{lis_one[1][1]}мм.', lid_m2, tray_m2]
 
         except ZeroDivisionError:
             result = self.sep_lid_tray(lid, tray, lis_siz)
-            return f'- {result}л.Крышка и дно раздельно. '\
-                   f'Крышка - {lis_one[0][0]}x{lis_one[0][1]}мм. ' \
-                   f'Дно - {lis_one[1][0]}x{lis_one[1][1]}мм.'
+            lid_m2 = calc_m2(lis_one[0])
+            tray_m2 = calc_m2(lis_one[1])
+            return [f'Расход картона - {toFixed(result, 2)}л.Крышка и дно раздельно. '
+                   f'Крышка - {lis_one[0][0]}x{lis_one[0][1]}мм. '
+                   f'Дно - {lis_one[1][0]}x{lis_one[1][1]}мм.', lid_m2, tray_m2]
 
     def cardboard_box(self):
         # развернутая крышка
@@ -126,7 +145,7 @@ class Cardboard_Box:
 
         try:
             result = self.expence(lid_card, tray_card)
-            return f'Расход картона {result}'
+            return result
         except ZeroDivisionError:
             return 'Неполучилось разместить на листе.'
 
@@ -189,19 +208,19 @@ class Paper_Box:
                 tray_bor = calc([tray[0]], lis_siz)
                 tray_dno = calc([tray[1]], lis_siz)
                 tray_ras = tray_bor[0] + tray_dno[0]
-                return f'- {lid_ras[0] + tray_ras}л. Донышко бортом.' \
+                return f'Расход бумаги - {toFixed(lid_ras[0] + tray_ras, 2)}л. Донышко бортом.' \
                        f' Крышка - {lid[0]}x{lid[1]}мм. ' \
                        f'Борт - {tray[0][0]}x{tray[0][1]}мм. Дно - {tray[1][0]}x{tray[1][1]}мм.'
             elif a == 6:
                 tray_bor = calc([tray[0]], lis_siz) * 2
                 tray_dno = calc([tray[1]], lis_siz)
                 tray_ras = tray_bor[0] + tray_dno[0]
-                return f'- {lid_ras[0] + tray_ras}л. Донышко бортом.' \
+                return f'Расход бумаги - {toFixed(lid_ras[0] + tray_ras, 2)}л. Донышко бортом.' \
                        f'Крышка - {lid[0]}x{lid[1]}мм. ' \
                        f'Борт - {tray[0][0]}x{tray[0][1]}мм. Дно - {tray[1][0]}x{tray[1][1]}мм.'
             else:
                 tray_ras = calc([tray], lis_siz)[0]
-                return f'- {lid_ras[0] + tray_ras}л. Донышко одним листом. ' \
+                return f'Расход бумаги - {toFixed(lid_ras[0] + tray_ras, 2)}л. Донышко одним листом. ' \
                        f'Крышка - {lid[0]}x{lid[1]}мм. ' \
                        f'Дно - {tray[0]}x{tray[1]}мм.'
         except Exception:
@@ -223,7 +242,7 @@ class Paper_Box:
 
         try:
             result = self.expence(lid_pap, tray_pap)
-            return f'Расход бумаги {result}'
+            return result
 
         except ZeroDivisionError:
             return 'Неполучилось расчитать.'
