@@ -17,7 +17,7 @@
 
 <center>
 <form action="{% url 'result' %}" method="">
-    <br><INPUT name="currency" value="Курс евро" required="required">
+    <br><INPUT name="currency" value="Курс евро" required="required" autocomplete="on">
     <br><INPUT name="width" value="Ширина" required="required">
     <br><INPUT name="length" value="Длина" required="required">
     <br><INPUT name="hight" value="Высота" required="required">
@@ -39,8 +39,12 @@
     <br><button type="submit">Calculet</button>
 
 </form>
+
+
+<br><b>Не получилось рассчитать, оставьте заявку на почту или обратитесь к нашему менеджеру!</b>
+
+
+
 </center>
-
-
 </body>
 </html>

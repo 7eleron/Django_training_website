@@ -3,30 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        select {
+            width: 200px;
+    }
+        INPUT {
+            width: 192px;
+    }
+    </style>
 </head>
 <center><H2><FONT FACE="Arial" SIZE=6 COLOR=TEAL>Калькулятор</FONT></h2></center>
 <body>
+
 <center>
-<form action="" method="">
-    <label>Width</label>
-    <input name="width">
-    <br><label>Length</label>
-    <INPUT name="length">
-    <br><label>Hight</label>
-    <INPUT name="hight">
-    <br><label>How many</label>
-    <INPUT name="sum">
+<form action="{% url 'result' %}" method="">
+    <br><INPUT name="currency" value="Курс евро" required="required" autocomplete="on">
+    <br><INPUT name="width" value="Ширина" required="required">
+    <br><INPUT name="length" value="Длина" required="required">
+    <br><INPUT name="hight" value="Высота" required="required">
+    <br><INPUT name="sum" value="Количество" required="required">
+
+    <br><select name="cardboard" required="required">
+    <option value="cardboard">Картон</option>
+        <option value="Сураж 2 мм">Сураж 2 мм</option>
+        <option value="Eska 2 мм">Eska 2 мм</option>
+</select>
+
+    <br><select name="paper" required="required">
+    <option value="paper">Бумага</option>
+        <option value="Keaykolour 120 г/м2">Keaykolour 120 г/м2</option>
+        <option value="Senzo 175 г/м2">Senzo 175 г/м2</option>
+        <option value="Pergraphica черная 120 г/м2">Pergraphica черная 120 г/м2</option>
+</select>
+
     <br><button type="submit">Calculet</button>
+
 </form>
 
+
 <br>{{ data }}
-<br>{{ result_cardboard }}
-<br>{{ result_paper }}
-<br>Стоимость работы крышки - {{ lid }}
-<br>Стоимость работы донышка - {{ tray }}
-<br>Стоимость работы общая - {{ work }}
-
-
+<br>Расход картона - {{ result_cardboard_0 }}л. {{ result_cardboard_1 }}
+<br>Расход бумаги - {{ result_paper_0 }}л. {{ result_paper_1 }}
+<br>Стоимость работы - {{ work }}.
+<br>Картон - {{ cardboard }}.
+<br>Бумага - {{ paper }}.
+    <br><b>Цена коробки - {{ sum }} руб/шт.</b>
 
 
 </center>
