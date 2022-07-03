@@ -30,7 +30,7 @@ class Work(models.Model):
     Scotch = models.IntegerField(null=True)
 
     def __str__(self):
-        return f'{self.Name}/{self.Format}'
+        return self.Name
 
     class Meta:
         verbose_name = 'Работа'
@@ -52,3 +52,16 @@ class Material(models.Model):
     class Meta:
         verbose_name = 'Материал'
         verbose_name_plural = 'Материалы'
+
+
+class Work2(models.Model):
+    Size = models.IntegerField(null=True)
+    Hight = models.IntegerField(null=True)
+    Count = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.Size
+
+    class Meta:
+        verbose_name = 'Работа'
+        verbose_name_plural = 'Работы'
