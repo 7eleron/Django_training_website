@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CubBox0Config(AppConfig):
+class PriceConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'cub_box_0'
+    name = 'price'

@@ -1,46 +1,36 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        select {
-            width: 200px;
-    }
-        INPUT {
-            width: 192px;
-    }
-    </style>
-</head>
-<center><H2><FONT FACE="Arial" SIZE=6 COLOR=TEAL>Калькулятор</FONT></h2></center>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block index %}
 
-<center>
-<form action="{% url 'result' %}" method="">
-    <br><INPUT name="currency" value="Курс евро" required="required">
-    <br><INPUT name="width" value="Ширина" required="required">
-    <br><INPUT name="length" value="Длина" required="required">
-    <br><INPUT name="hight" value="Высота" required="required">
-    <br><INPUT name="sum" value="Количество" required="required">
+	<!-- карусель -->
+	{% include 'carusel.html' %}
+  	<!-- Карточки -->
+	{% include 'price.html' %}
+  	<!-- форма -->
+  	<section>
+  		<div class="container class_form">
+  			<h1 class="text-3">Оставь заявку и получи услугу</h1>
+  			<div class="row justify-content-center">
+  			<form action="{% url 'thanks' %}" method="POST" style="width: 50%;">
+				{% csrf_token %}
+			  <div class="form-group row">
+			    <label for="inputEmail3" class="col-sm-2 col-form-label">Имя</label><br>
+				  {{ form.name }}
+			    <div class="">
+			    </div>
+			  </div>
+			  <div class="form-group row">
+			    <label for="inputEmail3" class="col-sm-2 col-form-label">Телефон</label><br>
+			      {{ form.phone }}
+			    <div class="">
+			    </div>
+			  </div>
+			  <div style="float: right;" class="form-group row">
+			      <button type="submit" class="btn btn-success">ОСТАВИТЬ ЗАЯВКУ</button>
+			  </div>
+			</form>
+			</div>
+  		</div>
+  	</section>
+{% endblock %}
 
-    <br><select name="cardboard" required="required">
-    <option value="cardboard">Картон</option>
-        <option value="Сураж 2 мм">Сураж 2 мм</option>
-        <option value="Eska 2 мм">Eska 2 мм</option>
-</select>
-
-    <br><select name="paper" required="required">
-    <option value="paper">Бумага</option>
-        <option value="Keaykolour 120 г/м2">Keaykolour 120 г/м2</option>
-        <option value="Senzo 175 г/м2">Senzo 175 г/м2</option>
-        <option value="Pergraphica черная 120 г/м2">Pergraphica черная 120 г/м2</option>
-</select>
-
-    <br><button type="submit">Calculet</button>
-
-</form>
-</center>
-
-
-</body>
-</html>
