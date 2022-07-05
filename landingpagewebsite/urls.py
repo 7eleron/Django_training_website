@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+<<<<<<< HEAD
 from crm import views
+=======
+from cub_box_0 import views
+>>>>>>> 1bf7bd73dc1c5c04656a15294437f95820bee692
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -23,5 +27,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.first_page),
+<<<<<<< HEAD
     path('thanks', views.thanks_page, name='thanks')
+=======
+    path('result', views.req_data, name='result')
+>>>>>>> 1bf7bd73dc1c5c04656a15294437f95820bee692
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
